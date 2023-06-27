@@ -31,23 +31,6 @@ segments_to_display_short = []
 segments_to_display_angles = []
 sec_segments_to_display_same = []
 
-#@app.callback(
-#    dash.dependencies.Output('line-graph3', 'figure'),
-#    dash.dependencies.Output('line-graphx', 'figure'),
-#    dash.dependencies.Output('line-graph2', 'figure'),
-#    [dash.dependencies.Input('dropdown', 'value')])
-#def update_graph(value):
-#    for n in range(len(ats[0][4])):
-#        if value == n:
-#            first_line_x = ats[0][4][n][1].keys()
-#            first_line_y = ats[0][4][n][1].values()
-#    return first_line_x, first_line_y
-#
-
-
-#options=[{'label': str(key), 'value': value} for n in range(len(ats[0][4])) for key, value in ats[0][4][n][1].items()], #???
-#options=[{'label': "trace # " + str(n) + " " + ats[0][4][n][0][:-1], 'value': n} for n in range(len(ats[0][4]))], #???
-
 
 @app.callback(
     dash.dependencies.Output('line-graph3', 'figure'),

@@ -52,10 +52,7 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
         if len(t[1]) > no_sh and len(t[1]) < no_ln:
             ts_list.append(t) #tuple should be there
             againagain.append(process_exec_info[index])
-   
- #   f = open("demofile3.txt", "w")
- #   f.write(str(ts_list))
-  #  f.close()
+  
    # max_elements = max_groupsize
     time_s_for_dtw = []
     not_ok = []

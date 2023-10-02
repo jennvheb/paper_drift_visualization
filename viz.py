@@ -50,7 +50,7 @@ def scale_lengths(line_segments, scale_factor):
 
 def get_point(first_line_x, first_line_y, point_x):
     for u in range(len(first_line_x)-1): # this is the x values of the first time series
-        if first_line_x[u] >= point_x:
+        if round(first_line_x[u],2) == round(point_x, 2):
             p1 = Point(first_line_x[u],first_line_y[u])
             return p1 
 

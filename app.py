@@ -35,12 +35,13 @@ sec_segments_to_display_same = []
 @app.callback(
     dash.dependencies.Output('line-graph3', 'figure'),
     [dash.dependencies.Input('line-graph3', 'clickData'),
+     dash.dependencies.Input('url', 'pathname'),
      dash.dependencies.Input('dropdown', 'value'),
      dash.dependencies.Input('scaling-factor3', 'value'),
     # dash.dependencies.Input('spacing3', 'value')
     ])
 
-def update_line4(clickData, dropdown, value):
+def update_line4(clickData, pathname, dropdown, value):
     first_line_x = list(ats[0][4][0][1].keys())
     first_line_y = list(ats[0][4][0][1].values())
     try:
@@ -49,12 +50,16 @@ def update_line4(clickData, dropdown, value):
                 if dropdown == n:
                     first_line_x = list(ats[0][4][n][1].keys())
                     first_line_y = list(ats[0][4][n][1].values())
+        if len(pathname) > 1:
+            x_val = float(pathname.strip("/"))
         if clickData:
+            point = clickData['points'][0]
+            x_val = point['x']
+        if x_val:
             if len(segments_to_display_angles) > 0:
                 for elem in segments_to_display_angles:
                     elem[0]['visible'] = False
-            point = clickData['points'][0]
-            x_val = point['x']
+            
             distance = 0.1
             segments_to_display5, unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, x_val, value, distance)
             tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
@@ -77,12 +82,13 @@ def update_line4(clickData, dropdown, value):
 @app.callback(
     dash.dependencies.Output('line-graphx', 'figure'),
     [dash.dependencies.Input('line-graphx', 'clickData'),
+     dash.dependencies.Input('url', 'pathname'),
      dash.dependencies.Input('dropdown', 'value'),
      dash.dependencies.Input('scaling-factorx', 'value'),
   #   dash.dependencies.Input('spacingx', 'value')
     ])
 
-def update_linex(clickData, dropdown, value):
+def update_linex(clickData, pathname, dropdown, value):
     first_line_x = list(ats[0][4][0][1].keys())
     first_line_y = list(ats[0][4][0][1].values())
     try:
@@ -91,12 +97,15 @@ def update_linex(clickData, dropdown, value):
                 if dropdown == n:
                     first_line_x = list(ats[0][4][n][1].keys())
                     first_line_y = list(ats[0][4][n][1].values())        
+        if len(pathname) > 1:
+            x_val = float(pathname.strip("/"))
         if clickData:
-            if len(segments_to_display_short) > 0:
-                for elem in segments_to_display_short:
-                    elem[0]['visible'] = False
             point = clickData['points'][0]
             x_val = point['x']
+        if x_val:
+            if len(segments_to_display_angles) > 0:
+                for elem in segments_to_display_angles:
+                    elem[0]['visible'] = False
             segments_to_displayz, unedited2, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, x_val, value)
             tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
             segments_to_displayy = prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats)
@@ -117,12 +126,13 @@ def update_linex(clickData, dropdown, value):
 @app.callback(
     dash.dependencies.Output('line-graph2', 'figure'),
     [dash.dependencies.Input('line-graph2', 'clickData'),
+     dash.dependencies.Input('url', 'pathname'),
     dash.dependencies.Input('dropdown', 'value'),
     dash.dependencies.Input('scaling-factor2', 'value'),
   #  dash.dependencies.Input('spacing2', 'value')
     ])
 
-def update_line3(clickData, dropdown, value):
+def update_line3(clickData, pathname, dropdown, value):
     first_line_x = list(ats[0][4][0][1].keys())
     first_line_y = list(ats[0][4][0][1].values())
     try:
@@ -131,13 +141,16 @@ def update_line3(clickData, dropdown, value):
                 if dropdown == n:
                     first_line_x = list(ats[0][4][n][1].keys())
                     first_line_y = list(ats[0][4][n][1].values()) 
+        if len(pathname) > 1:
+            x_val = float(pathname.strip("/"))
         if clickData:
-            if len(sec_segments_to_display_same) > 0:
-                for elem in sec_segments_to_display_same:
-                    elem[0]['visible'] = False
             point = clickData['points'][0]
             x_val = point['x']
-            sec_segments_to_display2, unedited2, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y,ats, x_val, value)
+        if x_val:
+            if len(segments_to_display_angles) > 0:
+                for elem in segments_to_display_angles:
+                    elem[0]['visible'] = False
+            sec_segments_to_display2, unedited2, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y, ats, x_val, value)
             tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
             sec_segments_to_display = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)
         else:
@@ -188,6 +201,7 @@ fig2.update_xaxes(range = [-3, 33], constrain = 'domain')
 #print("lenght!!", "trace #", n, ats[0][4][0][0])
 
 app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
     html.H1(children='Drift Visualisation Method', style = {'font-weight': 'bold','textAlign': 'center', 'margin-top':'15px', 'margin-bottom': '15px'}), 
     html.Div([
         html.Div([
@@ -211,6 +225,7 @@ app.layout = html.Div([
             html.Label('Choose trace to compare:', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
                 dcc.Dropdown(
                     id='dropdown',
+                    persistence=True,
                     #ats[-1][0][0], 'y' : ats[-1][1].ravel()
                     options=[{'label': "trace # " + str(n) + " " + ats[0][4][n][0][:-1], 'value': n} for n in range(len(ats[0][4]))], #???
                     value= 0  # Set the default value to the first time series
@@ -218,7 +233,7 @@ app.layout = html.Div([
         html.Div([
             html.P(children='Machining V2: the 90 degree angles method', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
             html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-            dcc.Input(id='scaling-factor3', type='number', min=1,  step=1, value=1),
+            dcc.Input(id='scaling-factor3', persistence=True, type='number', min=1,  step=1, value=1),
            # html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
            # dcc.Input(id='spacing3', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
@@ -231,7 +246,7 @@ app.layout = html.Div([
             html.P(children='Machining V2: the shortest distance method', style = {'font-weight': 'bold', 'textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
             html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
 
-            dcc.Input(id='scaling-factorx', type='number', min=1, step=1, value=1),
+            dcc.Input(id='scaling-factorx',persistence=True, type='number', min=1, step=1, value=1),
         #    html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
 
          #   dcc.Input(id='spacingx', type='number', min=0, step=0.1, value=0),
@@ -244,7 +259,7 @@ app.layout = html.Div([
         html.Div([
             html.P(children='Machining V2: the same timestamp method', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
             html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-            dcc.Input(id='scaling-factor2', type='number', min=1, step=1, value=1),
+            dcc.Input(id='scaling-factor2',persistence=True, type='number', min=1, step=1, value=1),
          #   html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
          #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
             dcc.Graph(

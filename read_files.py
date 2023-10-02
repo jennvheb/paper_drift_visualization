@@ -8,13 +8,13 @@ import copy
 import numpy as np
 from scipy import signal
 import math
+import json
 
 
 # import the files and transform into time series
 
 def read(directory, folder):
     filenames = []
-
     #get and go through index.txt
 #    for filename in os.listdir(directory):
 #        if filename.endswith(".txt"):
@@ -44,20 +44,15 @@ def query_status_file(filenames, folder):
                                 for k, v in data['event']['data']['data_receiver'][0].items():
                                     if k == 'data':  
                                         if 'CPEE-INSTANCE-UUID' in v:
-                                            sensordata.append((v['CPEE-INSTANCE-UUID'], filename[1].rstrip()))
+                                            sensordata.append((v['CPEE-INSTANCE-UUID'], filename[1].rstrip())) 
                                             flag = True
                                             break
                             if flag == True:
                                 break
                     if flag == True:
                          break
-                                
-                            
-                   
-                                
 #    print(len(sensordata))
 #    return
-# TODO: we need to add that when one is okay and when one isn't
     return sensordata
 
 def make_traces(sensordata, folder):
@@ -69,7 +64,6 @@ def make_traces(sensordata, folder):
     to_file = dict()
     tick = 'a'
     for filename in sensordata:
-            
             f = os.path.join(folder, filename[0] + ".xes.yaml")
             with open(f, 'r') as stream: # open a file
                 ctr = 0
@@ -119,7 +113,8 @@ def make_traces(sensordata, folder):
                         tmp[tme] = elem
                    
                     logs[filename[1]+str(tick)] = tmp
-                    logs2[filename] = time_series
+                    logs2[str(filename[0]) + ":" +str(filename[1])] = time_series
+                
                     regular = timestampss.sample( # resample the process info in same period as the time series
                         sampling_period=0.05,
                         start= timestampss.first_key(),
@@ -138,9 +133,14 @@ def make_traces(sensordata, folder):
         overlog['GV12 Machining'] = logs # time series
       #  print(logs2[('85f5c26f-3419-457f-835e-b7ff8ed9e30b', 'ok\n')])
         to_file['GV12 Machining'] = logs2
-        f = open("traces_relative.txt", "w")
-        f.write(str(to_file))
-        f.close()
+        # Serializing json
+ #       json_object = json.dumps(to_file, indent=4)
+ #       # Writing to sample.json
+ #       with open("traces_relative.json", "w") as outfile:
+ #           outfile.write(json_object)
+ #       f = open("traces_relative.txt", "w")
+ #       f.write(str(to_file))
+ #       f.close()
 
         all_peinfo['GV12 Machining'] = single_peinfo # process execution information
 

@@ -122,10 +122,8 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
         sec_segments_to_display = []
  
     
-    # Retrieve current data (or initialize it if it's the first time)
     current_data = dash.callback_context.states.get('lengths-store.data', {})
 
-    # Update lengths store
     if segments_lengths90:
         current_data['90-degrees-method'] = {'lengths in mm': segments_lengths90}
     if segments_lengthsshortest:
@@ -135,7 +133,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
   #  print("current data", current_data)
     figure90 = {
         'data': [
-            # Your data structure for line-graph3 here
             {'x': first_line_x, 'y': first_line_y, 'type': 'line', 'name': "trace # " + str(n) + " " + ats[0][4][n][0].split()[1], 'showlegend':True, 'visible': True},
             *segments_to_display6
         ],
@@ -144,7 +141,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
 
     figureshortest = {
         'data': [
-            # Your data structure for line-graphx here
             {'x': first_line_x, 'y': first_line_y, 'type': 'line', 'name': 'trace', 'showlegend':True, 'visible': True},
             *segments_to_displayy
         ],
@@ -153,7 +149,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
 
     figuresame = {
         'data': [
-            # Your data structure for line-graphx here
             {'x': first_line_x, 'y': first_line_y, 'type': 'line', 'name': 'trace', 'showlegend':True, 'visible': True},
             *sec_segments_to_display
         ],
@@ -168,7 +163,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
 
 @app.server.route('/<id>/<point>/json')
 def lengths_json(id, point):
-    # Fetch lengths and graph names from the Store component
     lengths_data = cache.get('lengths-store')
     response_data = {
         'trace filename': id,

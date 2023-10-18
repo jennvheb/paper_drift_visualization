@@ -101,7 +101,7 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
             last_ats = proc_exec_x[-1]   
             first_ats = proc_exec_x[0]
      #      print("dtw", len(time_s_y))
-            all_together.append((ats_x, ats_y, time_s_x, time_s_y, ts_list, 'ok'))
+            all_together.append((ats_x, ats_y, time_s_x, time_s_y, ts_list, 'ok')) # 0: ats x werte 1: ats y werte 2: alle time series x werte (nok oder ok) 3: alle time series y werte (nok oder ok) 4: alle time series egal ob ok oder nicht ok 5: ok/nok
             sens.append((proc_exec_x[0], proc_exec_y[0], last_ats, proc_ex_ats.ravel(), proc_exec_sensorids, first_ats)) 
             
             if len(not_ok) > 0:

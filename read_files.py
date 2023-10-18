@@ -53,6 +53,7 @@ def query_status_file(filenames, folder):
                          break
 #    print(len(sensordata))
 #    return
+#    print(sensordata)
     return sensordata
 
 def make_traces(sensordata, folder):
@@ -64,7 +65,7 @@ def make_traces(sensordata, folder):
     to_file = dict()
     tick = 'a'
     for filename in sensordata:
-            f = os.path.join(folder, filename[0] + ".xes.yaml")
+            f = os.path.join(folder, filename[0] + ".xes.yaml") # this here is what i need to save
             with open(f, 'r') as stream: # open a file
                 ctr = 0
                 time_sequence = traces.TimeSeries()
@@ -87,14 +88,11 @@ def make_traces(sensordata, folder):
                                                         time_series[0] = v[i]['value']
                                                         ctr= 1
                                                     if ctr != 0:
-                                                        
                                                         parsed_2 = dp.parse(v[i]['timestamp'])
-                                                        
                                                         t_in_seconds = parsed_t.timestamp() # here are the seconds
                                                         two_in_seconds = parsed_2.timestamp() 
                                                         time_sequence[two_in_seconds-t_in_seconds] = v[i]['value']
                                                         time_series[two_in_seconds-t_in_seconds] = v[i]['value']
-
                                                         timestampss[dp.parse(v[i]['timestamp'])] = two_in_seconds-t_in_seconds
                                                         
 
@@ -112,7 +110,13 @@ def make_traces(sensordata, folder):
                     for tme, elem in regular:
                         tmp[tme] = elem
                    
-                    logs[filename[1]+str(tick)] = tmp
+                    logs[str(filename[0])+ " " +str(filename[1])] = tmp
+
+                    testingisfun = filename[0]+ " " +filename[1]
+                    plswork = testingisfun.split()
+          #          print(plswork[0])
+          #          print(plswork[1])
+
                     logs2[str(filename[0]) + ":" +str(filename[1])] = time_series
                 
                     regular = timestampss.sample( # resample the process info in same period as the time series
@@ -143,7 +147,7 @@ def make_traces(sensordata, folder):
  #       f.close()
 
         all_peinfo['GV12 Machining'] = single_peinfo # process execution information
-
+ 
    
     return overlog, all_peinfo
 

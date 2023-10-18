@@ -31,6 +31,7 @@ def get_processinfo(peinfo, clickdata): # peinfo are the actual timestamps and s
 
 def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats):
     segments_to_displayx = []
+    segments_length = dict()
     for elem, segment in enumerate(segments_to_displayz): # iterate through the line segments
             cmp = LineString([(unedited2[elem][0][0], unedited2[elem][0][1]), (unedited2[elem][1][0], unedited2[elem][1][1])]).length
             dduration= abs(unedited2[elem][0][0] - unedited2[elem][1][0]) 
@@ -38,7 +39,7 @@ def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, 
                 namez = "trace + ats " + str(ats[elem][-1])
                 segments_to_displayx.append([go.Scatter(x=[segment[0][0]], y=[segment[0][1]],name='x: ' + str(round(segment[0][0], 2)) + ' y: ' + str(round(segment[0][1], 2)),  mode='markers', marker=dict( size=10, color='red'), visible=True)])
             else: namez = "trace + ats " +str(ats[elem][-1])
-
+            segments_length[namez] = cmp
             if math.isclose(cmp, 0.05) or cmp > 0.05: # if line segment bigger than set threshold, then it becomes thicker
                 if len(segment[0]) == 3: # if there is an offset, that changes the x/y inputs
                     segments_to_displayx.append([go.Scatter(
@@ -89,6 +90,7 @@ def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, 
                                    hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br>to<br> %{customdata[2]}',visible=True)]),
     #+'<br> First segments sensor IDs: %{customdata[3]}'+ '<br> Second segments sensor IDs: %{customdata[4]}'
     segments_to_displayy = [segment for segments_line in segments_to_displayx for segment in segments_line]
-    return segments_to_displayy
+ #   print("app_background", segments_length)
+    return segments_to_displayy, segments_length
 
 

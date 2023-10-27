@@ -13,8 +13,8 @@ from flask_caching import Cache
 ats, infoinggroups=preprocess() # sets window size, directory, and which outlier function to take
 
 app = dash.Dash(external_stylesheets=[dbc.themes.LUX])
-app.server.config['CACHE_TYPE'] = 'simple'
-cache = Cache(app.server)
+#app.server.config['CACHE_TYPE'] = 'simple'
+#cache = Cache(app.server)
 
 load_figure_template('LUX')
 server = app.server
@@ -41,8 +41,9 @@ sec_segments_to_display_same = []
 @app.callback(
     [dash.dependencies.Output('90-degrees-method', 'figure'),
      dash.dependencies.Output('shortest-distance-method', 'figure'),
-     dash.dependencies.Output('same-timestamp-method', 'figure'),
-     dash.dependencies.Output('lengths-store', 'data')],
+     dash.dependencies.Output('same-timestamp-method', 'figure')
+  #   dash.dependencies.Output('lengths-store', 'data')
+    ],
     [dash.dependencies.Input('90-degrees-method', 'clickData'),
      dash.dependencies.Input('shortest-distance-method', 'clickData'),
      dash.dependencies.Input('same-timestamp-method', 'clickData'),
@@ -123,14 +124,14 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
         sec_segments_to_display = []
  
     
-    current_data = dash.callback_context.states.get('lengths-store.data', {})
+    #current_data = dash.callback_context.states.get('lengths-store.data', {})
 
-    if segments_lengths90:
-        current_data['90-degrees-method'] = {'lengths in mm': segments_lengths90}
-    if segments_lengthsshortest:
-        current_data['shortest-distance-method'] = {'lengths in mm': segments_lengthsshortest}
-    if segments_lengthssame:
-        current_data['same-timestamp-method'] = {'lengths in mm': segments_lengthssame}
+    #if segments_lengths90:
+    #    current_data['90-degrees-method'] = {'lengths in mm': segments_lengths90}
+    #if segments_lengthsshortest:
+    #    current_data['shortest-distance-method'] = {'lengths in mm': segments_lengthsshortest}
+    #if segments_lengthssame:
+    #    current_data['same-timestamp-method'] = {'lengths in mm': segments_lengthssame}
   #  print("current data", current_data)
     figure90 = {
         'data': [
@@ -155,8 +156,9 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
         ],
         'layout' : {'xaxis':{"title": "time in seconds", "titlefont": {"family": "Arial", "size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, 'range':[-10, 20], 'constrain' : 'domain'}, 'yaxis':{"title": "sensor value in mm","margin-left":"36.5px", "margin-bottom": "7.6px", "titlefont": {"family": "Arial","size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, "scaleanchor":"x", "scaleratio":1},'legend': {"font": {"family": "Arial","size": 10, "color": "rgb(68, 68, 68)"}, 'hoverlabel_align' : 'right', 'margin' : {'l': 20, 'b': 30, 'r': 10, 't': 10}} },
     }
-    cache.set('lengths-store', current_data)
-    return figure90, figureshortest, figuresame, current_data
+    #cache.set('lengths-store', current_data)
+    return figure90, figureshortest, figuresame
+#, current_data
 
 
 def calculate_graphs_without_updating(id, point):

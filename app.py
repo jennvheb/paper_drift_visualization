@@ -60,6 +60,7 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
     segments_lengthsshortest = []
 
     match = False
+    x_val = None
 
     split_path = pathname.strip("/").split("/")
     if len(pathname) > 1:
@@ -157,23 +158,63 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
     cache.set('lengths-store', current_data)
     return figure90, figureshortest, figuresame, current_data
 
-# here below
 
+def calculate_graphs_without_updating(id, point):
+    for n in range(len(ats[0][4])):
+        #  print(str(ats[0][4][n][0].split()[0]))
+        if str(id) == str(ats[0][4][n][0].split()[0]):
+        #     print("yes")
+            first_line_x = list(ats[0][4][n][1].keys())
+            first_line_y = list(ats[0][4][n][1].values())
+            match = True
+            break
+        if n == len(ats[0][4])-1 and match== False: 
+            first_line_x = []
+            first_line_y = []
+    distance = 0.1
+    fpoint = float(point)
+    segments_to_display5, unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, fpoint, 0, distance)
+    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+    segments_to_display6, segments_lengths90 = prep_segments_to_display(segments_to_display5, unedited2, tstamps, sensids, ats)
+    segments_to_displayz, unedited2, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, fpoint, 0)
+    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+    segments_to_displayy, segments_lengthsshortest = prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats)
+    sec_segments_to_display2, unedited2, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y, ats, fpoint, 0)
+    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+    sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)            
+    #current_data = dash.callback_context.states.get('lengths-store.data', {})
+    current_data = dict()
 
+    if segments_lengths90:
+        current_data['90-degrees-method'] = {'lengths in mm': segments_lengths90}
+    if segments_lengthsshortest:
+        current_data['shortest-distance-method'] = {'lengths in mm': segments_lengthsshortest}
+    if segments_lengthssame:
+        current_data['same-timestamp-method'] = {'lengths in mm': segments_lengthssame}
+
+    return current_data
+
+old_id = None
+old_point = None
 
 @app.server.route('/<id>/<point>/json')
 def lengths_json(id, point):
-    lengths_data = cache.get('lengths-store')
+    if old_id != id and old_point != point:
+        current_data = calculate_graphs_without_updating(id, point)
+   # lengths_data = cache.get('lengths-store')
     response_data = {
         'trace filename': id,
         'selected datapoint': point,
-        'data': lengths_data if lengths_data else {}
+    #    'data': lengths_data if lengths_data else {}
+        'data': current_data
     }
     response = app.server.response_class(
         response=json.dumps(response_data),
         status=200,
         mimetype='application/json'
     )
+  #  cache.clear()
+    current_data.clear()
     return response
 
 #for n in range(len(ats[0][4])):

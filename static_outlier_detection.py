@@ -2,6 +2,7 @@ import numpy as np
 from tslearn.barycenters import dtw_barycenter_averaging
 from tslearn.utils import to_time_series_dataset
 from collections import deque
+import json
 
 def static_od(time_sequence, all_peinfo, window_size, max_group_size):
     all_together, sens = sliding_window(time_sequence, all_peinfo, window_size, max_group_size)
@@ -131,6 +132,14 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
 
             time_s_for_dtw.clear()
             infoingroups.clear()
-   # print(len(sens))
+    
+   #  last_ts_list = dict()
+   #  sec_last_ts_list = dict()
+   #  for elem in ts_list:
+   #     sec_last_ts_list[elem[0]] = elem[1]
+   # last_ts_list['GV12 Machining'] = sec_last_ts_list
+   # json_object = json.dumps(last_ts_list, indent=4)
+   # with open("traces_no_outliers.json", "w") as outfile:
+   #     outfile.write(json_object)
     return all_together, sens
 

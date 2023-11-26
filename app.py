@@ -230,25 +230,30 @@ def lengths_json(id, point):
 fig = go.Figure()
 ctr = 0
 #for e in range(len(ats)):
+colors = ['lightsteelblue', 'red', 'blue', 'pink', 'orange', 'green', 'brown', 'purple']
+for e in range(len(ats)):
+        namez = "ats " + str(ats[e][-1])
+        fig.add_trace(go.Scatter(x=ats[e][0][0], y=ats[e][1].ravel(), name=namez, line=dict(color=colors[e])))
 for i in range(len(ats[0][4])):
             ctr += 1
-            namez = "trace " + str(i)
+            namez = "trace " + str(ats[0][4][i][0].split()[0])
             fig.add_trace(go.Scatter(x= list(ats[0][4][i][1].keys()), y=list(ats[0][4][i][1].values()),name=namez, line=dict(color="#999999")))
       #      fig.add_trace(go.Scatter(x=ats[e][2][i], y=ats[e][3][i],name=namez, line=dict(color="#999999")))
 fig.update_layout(xaxis_title="time in seconds", yaxis_title= "sensor value in mm", font=dict( family = "Arial",size=10, color='rgb(68, 68, 68)'), legend=dict(font=dict( size= 10, color='rgb(68, 68, 68)')))
 fig.update_yaxes(scaleanchor = "x", scaleratio = 1)
 fig.update_xaxes(range = [-3, 33], constrain = 'domain')
 
-#this is the graph with all ats
-colors = ['lightsteelblue', 'red', 'blue', 'pink', 'orange', 'green', 'brown', 'purple']
-fig2 = go.Figure()
-fig2.add_trace(go.Scatter(x=ats[0][2][0], y=ats[0][3][0], name="trace 1"))
-for e in range(len(ats)):
-        namez = "ats " + str(ats[e][-1])
-        fig2.add_trace(go.Scatter(x=ats[e][0][0], y=ats[e][1].ravel(), name=namez, line=dict(color=colors[e])))
-fig2.update_layout(xaxis_title="time in seconds", yaxis_title= "sensor value in mm",   font=dict(family = "Arial", size=10, color='rgb(68, 68, 68)'), legend=dict(font=dict( size= 10, color='rgb(68, 68, 68)')))
-fig2.update_yaxes(scaleanchor = "x", scaleratio = 1)
-fig2.update_xaxes(range = [-3, 33], constrain = 'domain')
+##this is the graph with all ats
+#colors = ['lightsteelblue', 'red', 'blue', 'pink', 'orange', 'green', 'brown', 'purple']
+#fig2 = go.Figure()
+#fig2.add_trace(go.Scatter(x=ats[0][2][0], y=ats[0][3][0], name="trace 1"))
+#fig2.add_trace(go.Scatter(x=first_line_x, y=first_line_y, name="trace x"))
+#for e in range(len(ats)):
+#        namez = "ats " + str(ats[e][-1])
+#        fig2.add_trace(go.Scatter(x=ats[e][0][0], y=ats[e][1].ravel(), name=namez, line=dict(color=colors[e])))
+#fig2.update_layout(xaxis_title="time in seconds", yaxis_title= "sensor value in mm",   font=dict(family = "Arial", size=10, color='rgb(68, 68, 68)'), legend=dict(font=dict( size= 10, color='rgb(68, 68, 68)')))
+#fig2.update_yaxes(scaleanchor = "x", scaleratio = 1)
+#fig2.update_xaxes(range = [-3, 33], constrain = 'domain')
 
 
 #print("lenght!!", "trace #", n, ats[0][4][0][0])
@@ -259,21 +264,22 @@ app.layout = html.Div([
     html.H1(children='Drift Visualisation Method', style = {'font-weight': 'bold','textAlign': 'center', 'margin-top':'15px', 'margin-bottom': '15px'}), 
     html.Div([
         html.Div([
-            html.P(children='All traces, unchanged', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px', 'margin-bottom': '-3px'}),
+            html.P(children='All traces + ats ok + ats nok', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px', 'margin-bottom': '-3px'}),
             dcc.Graph(
                 id='line-graph5',
-                figure=fig,style={'width': '60vh', 'height': '95vh'}
+                figure=fig, style={'width': '120vh', 'height': '95vh'}
             ),
         ],
-        style={'width': '50%', 'display': 'inline-block'}),
-        html.Div([
-            html.P(children='Average time series', style = {'font-weight': 'bold','textAlign': 'left', 'margin-left':'13px','margin-top':'10px','margin-bottom': '-3px'}),
-            dcc.Graph( 
-                id='line-graph4',
-                figure=fig2, style={'width': '60vh', 'height': '95vh'}
-            ),
-        ],
-        style={'width': '50%', 'display': 'inline-block'})]),
+     #   style={'width': '50%', 'display': 'inline-block'}),
+     #   html.Div([
+     #       html.P(children='Average time series', style = {'font-weight': 'bold','textAlign': 'left', 'margin-left':'13px','margin-top':'10px','margin-bottom': '-3px'}),
+     #       dcc.Graph( 
+     #           id='line-graph4',
+     #           figure=fig2, style={'width': '60vh', 'height': '95vh'}
+     #       ),
+     #   ],
+      #  style={'width': '50%', 'display': 'inline-block'}
+      )]),
     html.Div([
        # html.Div([
        #     html.Label('Choose trace to compare:', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
@@ -292,7 +298,7 @@ app.layout = html.Div([
            # dcc.Input(id='spacing3', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
                 id='90-degrees-method',
-                style={'width': '60vh', 'height': '95vh'}
+                style={'width': '70vh', 'height': '95vh'}
             ),
         ],
         style={'width': '50%', 'display': 'inline-block'}),
@@ -306,7 +312,7 @@ app.layout = html.Div([
          #   dcc.Input(id='spacingx', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
                 id='shortest-distance-method',
-                style={'width': '60vh', 'height': '95vh'}
+                style={'width': '70vh', 'height': '95vh'}
             ), 
         ],
         style={'width': '50%', 'display': 'inline-block'})]),
@@ -318,7 +324,7 @@ app.layout = html.Div([
          #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
                 id='same-timestamp-method',
-                style={'width': '60vh', 'height': '95vh'}
+                style={'width': '70vh', 'height': '95vh'}
             ),
         ])])
 

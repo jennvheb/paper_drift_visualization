@@ -85,7 +85,7 @@ def calculate_segments_angles(first_line_x, first_line_y, ats, point_x): #code d
     proc_exec = []
     dist = 0.1
     p1 = get_point(first_line_x, first_line_y, point_x)
-   # original = LineString(np.column_stack((ats[0][2][0], ats[0][3][0]))) # this was before in my thesis
+  #  original = LineString(np.column_stack((ats[0][2][0], ats[0][3][0]))) # this was before in my thesis
     original = LineString(np.column_stack((first_line_x, first_line_y)))
     line_ts = LineString(np.column_stack((ats[0][0][0], ats[0][1].ravel()))) # FIXME:
     intersections = get_perp_line(original, p1, dist, line_ts)

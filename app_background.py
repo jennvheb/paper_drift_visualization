@@ -29,6 +29,17 @@ def get_processinfo(peinfo, clickdata): # peinfo are the actual timestamps and s
                 break
     return realtime, sensorids
 
+def calculate_lengths(unedited2, ats):
+    segments_length = dict()
+    for elem in range(len(unedited2)): # iterate through the line segments
+            cmp = LineString([(unedited2[elem][0][0], unedited2[elem][0][1]), (unedited2[elem][1][0], unedited2[elem][1][1])]).length
+            if elem == 0: # the first line segment is with the time series
+                namez = "trace + ats " + str(ats[elem][-1])
+            else: 
+                namez = "trace + ats " +str(ats[elem][-1])
+            segments_length[namez] = cmp
+    return segments_length
+
 def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats):
     segments_to_displayx = []
     segments_length = dict()

@@ -58,17 +58,19 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
     time_s_for_dtw = []
     not_ok = []
     infoingroups = []
+
+    ats_to_file = dict()
     #TODO: just put ts_list in dictionary
-    for i, e in enumerate(ts_list):
+    for i, e in enumerate(ts_list): # go through every trace
         
-        if 'n' not in e[0]:
+        if 'n' not in e[0]: #divide into nok and ok
             time_s_for_dtw.append(e[1])
             infoingroups.append(againagain[i])
         if 'n' in e[0]:
             not_ok.append(e[1])
             infoingroups.append(againagain[i])
         if i == len(ts_list)-1: # if the length of the new array is 2 or the rounded number OR the index is at the last element in the group (meaning it doesnt have to be a full group)
-            
+            # if its the last trace
             time_s_x = []
             time_s_y= []
             proc_exec_x = []
@@ -79,8 +81,11 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
             proc_exec_x_not = []
             proc_exec_y_not = []
             proc_exec_sensorids_not = []
+
+            to_file_ok = dict()
+            to_file_nok = dict()
    
-            for i in range(len(time_s_for_dtw)):
+            for i in range(len(time_s_for_dtw)): #this is ok
                 time_s_x.append(list(time_s_for_dtw[i].keys()))
                 time_s_y.append(list(time_s_for_dtw[i].values()))
             
@@ -88,10 +93,14 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
             
             ats_y = dtw_barycenter_averaging(to_ts)  
                 
+           # print(len(time_s_x), len(time_s_y), "thisisok") 16 16
             list_max = filter(lambda i: len(i) == max([len(l) for l in time_s_x]), time_s_x) # dtw returns from a list of time series, an ats with the length of the longest time series, so we need to find to match that here
             ats_x = list(list_max)
-
-            for i in range(len(infoingroups)):
+      #      print("ats_x", ats_x)
+      #     print("ats_y", ats_y.ravel())
+            y_values_as_tuples = [y[0] for y in ats_y]
+            to_file_ok = dict(zip(ats_x[0], y_values_as_tuples))
+            for i in range(len(infoingroups)): #this is the process info
                 proc_exec_sensorids.append(infoingroups[i][0])
                 proc_exec_x.append(list(infoingroups[i][1].keys()))
                 proc_exec_y.append(list(infoingroups[i][1].values()))
@@ -104,17 +113,22 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
      #      print("dtw", len(time_s_y))
             all_together.append((ats_x, ats_y, time_s_x, time_s_y, ts_list, 'ok')) # 0: ats x werte 1: ats y werte 2: alle time series x werte (nok oder ok) 3: alle time series y werte (nok oder ok) 4: alle time series egal ob ok oder nicht ok 5: ok/nok
             sens.append((proc_exec_x[0], proc_exec_y[0], last_ats, proc_ex_ats.ravel(), proc_exec_sensorids, first_ats)) 
-            
-            if len(not_ok) > 0:
-                for i in range(len(not_ok)):
+
+
+            if len(not_ok) > 0: #this is the nok
+
+                for i in range(len(not_ok)): 
                     time_x_not.append(list(not_ok[i].keys()))
                     time_y_not.append(list(not_ok[i].values()))
                 
+              #  print(len(time_x_not), len(time_y_not), len(ts_list)) 17 17 33
                 to_ts_y = to_time_series_dataset(time_y_not) 
                 ats_y_not_ok = dtw_barycenter_averaging(to_ts_y)
 
                 list_max = filter(lambda i: len(i) == max([len(l) for l in time_x_not]), time_x_not) # dtw returns from a list of time series, an ats with the length of the longest time series, so we need to find to match that here
                 ats_x_not = list(list_max)
+                y_values_as_tuples = [y[0] for y in ats_y_not_ok]
+                to_file_nok = dict(zip(ats_x_not[0], y_values_as_tuples))
 
                 for i in range(len(infoingroups)):
                     proc_exec_sensorids_not.append(infoingroups[i][0])
@@ -125,14 +139,24 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
             
                 last_ats_not = proc_exec_x_not[-1]   
                 first_ats_not = proc_exec_x_not[0]
-       #         print("no", len(time_y_not))
+       #        # ats[0 (ok) 1 (nok)] [0 atsx 1 atsy 2]
                 all_together.append((ats_x_not, ats_y_not_ok, time_x_not, time_y_not, ts_list, 'nok'))
                 sens.append((proc_exec_x_not[0], proc_exec_y_not[0], last_ats_not, proc_ex_ats_not.ravel(), proc_exec_sensorids_not, first_ats_not)) 
-           
-
+              #  print(ats_y_not_ok)
+         #   print(len(all_together)) 2
+            ats_to_file['ats_ok'] = to_file_ok
+            ats_to_file['ats_nok'] = to_file_nok
+            #print(to_file_ok)
+            # Serializing json
+            json_object = json.dumps(ats_to_file, indent=4)
+    #       # Writing to sample.json
+            with open("ats_nok_ok.json", "w") as outfile:
+               outfile.write(json_object)
+    #       f = open("traces_relative.txt", "w")
+    #       f.write(str(to_file))
+    #       f.close()
             time_s_for_dtw.clear()
             infoingroups.clear()
-    
    #  last_ts_list = dict()
    #  sec_last_ts_list = dict()
    #  for elem in ts_list:

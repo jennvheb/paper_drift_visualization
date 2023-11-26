@@ -131,7 +131,7 @@ def make_traces(sensordata, folder):
                         tmp[tme] = elem
                     single_peinfo[filename[1]+str(tick)] = tmp
                     tick = chr(ord(tick) + 1)
-                    
+                   
 
     if len(logs) > 0:
         overlog['GV12 Machining'] = logs # time series

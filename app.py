@@ -165,7 +165,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
 
 
 def calculate_graphs_without_updating(id, point):
-    distance_atsnok_atsok = dict()
     for n in range(len(ats[0][4])):
         if str(id) == str(ats[0][4][n][0].split()[0]):
             first_line_x = list(ats[0][4][n][1].keys()) # this is the x-values of the chosen trace for the point 
@@ -194,7 +193,7 @@ def calculate_graphs_without_updating(id, point):
     if segments_lengthssame:
         current_data['same-timestamp-method'] = {'lengths in mm': segments_lengthssame}
 
-    return current_data, distance_atsnok_atsok
+    return current_data
 
 old_id = None
 old_point = None
@@ -202,7 +201,7 @@ old_point = None
 @app.server.route('/<id>/<point>/json')
 def lengths_json(id, point):
     if old_id != id and old_point != point:
-        current_data, distance_atsnok_atsok = calculate_graphs_without_updating(id, point)
+        current_data = calculate_graphs_without_updating(id, point)
     
    # lengths_data = cache.get('lengths-store')
     response_data = {
@@ -210,7 +209,6 @@ def lengths_json(id, point):
         'selected datapoint': point,
     #    'data': lengths_data if lengths_data else {}
         'data': current_data,
-        'distance between ats_ok and ats_nok:': distance_atsnok_atsok
     }
     response = app.server.response_class(
         response=json.dumps(response_data),

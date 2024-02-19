@@ -38,21 +38,25 @@ segments_to_display_short = []
 segments_to_display_angles = []
 sec_segments_to_display_same = []
 
+
+
 @app.callback(
     [dash.dependencies.Output('90-degrees-method', 'figure'),
      dash.dependencies.Output('shortest-distance-method', 'figure'),
-     dash.dependencies.Output('same-timestamp-method', 'figure')
+     dash.dependencies.Output('same-timestamp-method', 'figure'),
+     dash.dependencies.Output('questionnaire', 'figure')
   #   dash.dependencies.Output('lengths-store', 'data')
     ],
     [dash.dependencies.Input('90-degrees-method', 'clickData'),
      dash.dependencies.Input('shortest-distance-method', 'clickData'),
      dash.dependencies.Input('same-timestamp-method', 'clickData'),
+     dash.dependencies.Input('questionnaire', 'clickData'),
      dash.dependencies.Input('url', 'pathname'),
      dash.dependencies.Input('scaling-factor90', 'value'),
      dash.dependencies.Input('scaling-factorshortest', 'value'),
      dash.dependencies.Input('scaling-factorsame', 'value')]
 )
-def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value90, valueshortest, valuesame):
+def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest, pathname, value90, valueshortest, valuesame):
     first_line_x = list(ats[0][4][0][1].keys())
     first_line_y = list(ats[0][4][0][1].values())
     n=0
@@ -62,6 +66,7 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
 
     match = False
     x_val = None
+    markings = []    
 
     split_path = pathname.strip("/").split("/")
     if len(pathname) > 1:
@@ -137,7 +142,20 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
         sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)            
     else:
         sec_segments_to_display = []
- 
+
+    if clickdataquest:
+        point = clickdataquest['points'][0]
+        x_val = point['x']
+        y_val = point['y']
+        if x_val:
+        # if len(segments_to_display_angles) > 0:
+        #     for elem in segments_to_display_angles:
+        #         elem[0]['visible'] = False
+            markings = get_the_markings(x_val, y_val)
+        else:
+            markings = []       
+        
+
     
     #current_data = dash.callback_context.states.get('lengths-store.data', {})
 
@@ -171,8 +189,18 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
         ],
         'layout' : {'xaxis':{"title": "time in seconds", "titlefont": {"family": "Arial", "size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, 'range':[-10, 20], 'constrain' : 'domain'}, 'yaxis':{"title": "sensor value in mm","margin-left":"36.5px", "margin-bottom": "7.6px", "titlefont": {"family": "Arial","size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, "scaleanchor":"x", "scaleratio":1},'legend': {"font": {"family": "Arial","size": 10, "color": "rgb(68, 68, 68)"}, 'hoverlabel_align' : 'right', 'margin' : {'l': 20, 'b': 30, 'r': 10, 't': 10}} },
     }
+    figurequest = {
+        'data': [
+            {'x': first_line_x, 'y': first_line_y, 'type': 'line', 'name': 'trace', 'showlegend':True, 'visible': True},
+            {'x' : ats[0][0][0], 'y' : list(ats[0][1].flatten()), 'type': 'line', 'name': 'ats ok', 'hoverinfo': 'none', 'showlegend':True, 'visible': True},
+            {'x' : ats[1][0][0], 'y' : list(ats[1][1].flatten()), 'type': 'line', 'name': 'ats nok', 'hoverinfo': 'none', 'showlegend':True, 'visible': True},
+
+            *markings
+        ],
+        'layout' : {'xaxis':{"title": "time in seconds", "titlefont": {"family": "Arial", "size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, 'range':[-10, 20], 'constrain' : 'domain'}, 'yaxis':{"title": "sensor value in mm","margin-left":"36.5px", "margin-bottom": "7.6px", "titlefont": {"family": "Arial","size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, "scaleanchor":"x", "scaleratio":1},'legend': {"font": {"family": "Arial","size": 10, "color": "rgb(68, 68, 68)"}, 'hoverlabel_align' : 'right', 'margin' : {'l': 20, 'b': 30, 'r': 10, 't': 10}} },
+    }
     #cache.set('lengths-store', current_data)
-    return figure90, figureshortest, figuresame
+    return figure90, figureshortest, figuresame, figurequest
 # current_data
 
 
@@ -221,6 +249,10 @@ def calculate_graphs_without_updating(id, point):
 
 old_id = None
 old_point = None
+markings = []
+def get_the_markings(x_val, y_val):
+    markings.append(go.Scatter(x=[x_val], y=[y_val], mode='markers', marker=dict(color='red'), name='x: '+ str(round(x_val, 2)) + ', y: '+ str(round(y_val, 2))))
+    return markings
 
 @app.server.route('/<id>/<point>/json')
 def lengths_json(id, point):
@@ -344,13 +376,27 @@ app.layout = html.Div([
             html.P(children='Machining V2: the same timestamp method', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
             html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
             dcc.Input(id='scaling-factorsame',persistence=True, type='number', min=1, step=1, value=1),
-         #   html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-         #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
+        #   html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
+        #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
                 id='same-timestamp-method',
                 style={'width': '70vh', 'height': '95vh'}
             ),
-        ])])
+            ],
+        style={'width': '50%', 'display': 'inline-block'}),
+        html.Div([
+            html.P(children='Selected Trace + Ats_ok + Ats_nok', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
+            html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
+            dcc.Input(id='scaling-factorsame',persistence=True, type='number', min=1, step=1, value=1),
+         #   html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
+         #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
+            dcc.Graph(
+                id='questionnaire',
+                style={'width': '70vh', 'height': '95vh'}
+            ),
+        ], 
+        style={'width': '50%', 'display': 'inline-block'}),
+        ])
 
 
 if __name__ == '__main__':

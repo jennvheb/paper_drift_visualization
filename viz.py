@@ -9,14 +9,14 @@ def calculate_shortest_distance(first_line_x, first_line_y,ats, point_x): #code 
     line_segments = []
     proc_exec = []
     p1 = get_point(first_line_x, first_line_y, point_x)
-    line_ts = LineString(np.column_stack((ats[0][0][0], ats[0][1].ravel()))) #FIXME: this needs to be on of the ats
+    line_ts = LineString(np.column_stack((ats[0][0][0], ats[0][1].ravel()))) 
     closest_point = line_ts.interpolate(line_ts.project(p1))
     proc_exec.append(p1.x)
     line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
     for n in range(len(ats)-1):
         proc_exec.append(closest_point.x)
         #  p1 = closest_point gone
-        line_ts = LineString(np.column_stack((ats[n+1][0][0], ats[n+1][1].ravel()))) #FIXME:
+        line_ts = LineString(np.column_stack((ats[n+1][0][0], ats[n+1][1].ravel()))) 
         closest_point = line_ts.interpolate(line_ts.project(p1))
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
         if n == len(ats)-2:
@@ -87,7 +87,7 @@ def calculate_segments_angles(first_line_x, first_line_y, ats, point_x): #code d
     p1 = get_point(first_line_x, first_line_y, point_x)
   #  original = LineString(np.column_stack((ats[0][2][0], ats[0][3][0]))) # this was before in my thesis
     original = LineString(np.column_stack((first_line_x, first_line_y)))
-    line_ts = LineString(np.column_stack((ats[0][0][0], ats[0][1].ravel()))) # FIXME:
+    line_ts = LineString(np.column_stack((ats[0][0][0], ats[0][1].ravel()))) 
     intersections = get_perp_line(original, p1, dist, line_ts)
     closest_point = identify_intersection(intersections, p1, line_ts)
     proc_exec.append(p1.x)
@@ -110,7 +110,7 @@ def calculate_segments_straight_up(first_line_x, first_line_y, ats, point_x): #c
     proc_exec = []
     p1 = get_point(first_line_x,first_line_y, point_x)
     proc_exec.append(p1.x)
-    tpv = np.interp(p1.x, ats[0][0][0], ats[0][1].ravel()) # FIXME:
+    tpv = np.interp(p1.x, ats[0][0][0], ats[0][1].ravel()) 
     closest_point = Point(p1.x, tpv)
     line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
     for n in range(len(ats)-1):
@@ -120,7 +120,7 @@ def calculate_segments_straight_up(first_line_x, first_line_y, ats, point_x): #c
  #       print("p1", p1.x)
   #      print("atsx", len(ats[n+1][0][0]))
   #      print("ats_y", len(ats[n+1][1].ravel()))
-        tpv = np.interp(p1.x, ats[n+1][0][0], ats[n+1][1].ravel()) #FIXME:
+        tpv = np.interp(p1.x, ats[n+1][0][0], ats[n+1][1].ravel()) 
         closest_point = Point(p1.x, tpv)
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
         if n == len(ats)-2:

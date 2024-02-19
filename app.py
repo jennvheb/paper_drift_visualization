@@ -80,6 +80,18 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, pathname, value
                 first_line_y = []
        # print("dateiname", dateiname)
         #   print("n", n)
+            elif str(dateiname) == "ats_ok":
+                #print(ats[0][5])
+                first_line_x = ats[0][0][0]
+                first_line_y = list(ats[0][1].flatten())
+                match = True
+                break
+            elif str(dateiname) == "ats_nok":
+                #print(ats[1][5])
+                first_line_x = ats[1][0][0]
+                first_line_y = list(ats[1][1].flatten())
+                match = True
+                break
     if clickData90:
         point = clickData90['points'][0]
         x_val = point['x']
@@ -174,6 +186,18 @@ def calculate_graphs_without_updating(id, point):
         if n == len(ats[0][4])-1 and match== False: 
             first_line_x = []
             first_line_y = []
+        elif str(id) == "ats_ok":
+                #print(ats[0][5])
+                first_line_x = ats[0][0][0]
+                first_line_y = list(ats[0][1].flatten())
+                match = True
+                break
+        elif str(id) == "ats_nok":
+            #print(ats[1][5])
+            first_line_x = ats[1][0][0]
+            first_line_y = list(ats[1][1].flatten())
+            match = True
+            break
     fpoint = float(point)
     unedited_angles, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, fpoint)
     segments_lengths90 = calculate_lengths(unedited_angles, ats)

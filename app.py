@@ -72,6 +72,7 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
     if len(pathname) > 1:
         dateiname, x_val = split_path
         x_val = float(x_val)
+     #   print("here", x_val)
         for n in range(len(ats[0][4])):
           #  print(str(ats[0][4][n][0].split()[0]))
             if str(dateiname) == str(ats[0][4][n][0].split()[0]):
@@ -106,7 +107,8 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
     if clickdatasame:
         point = clickdatasame['points'][0]
         x_val = point['x']
-    if x_val:
+    if x_val != None:
+      #  print("x_val", x_val)
         unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, x_val)
         segments_to_display5 = scale_lengths(unedited2, value90)
     #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)

@@ -134,7 +134,7 @@ def outlier_detection(time_sequence, all_peinfo, max_groupsize):
                     proc_exec_sensorids_not.append(infoingroups[i][0])
                     proc_exec_x_not.append(list(infoingroups[i][1].keys()))
                     proc_exec_y_not.append(list(infoingroups[i][1].values()))
-                
+               
                 proc_ex_ats_not = dtw_barycenter_averaging(proc_exec_y_not)
             
                 last_ats_not = proc_exec_x_not[-1]   

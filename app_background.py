@@ -17,6 +17,7 @@ def get_processinfo(peinfo, clickdata): # peinfo are the actual timestamps and s
         for same in range(len(peinfo[i-1][3])): # go through the average time series
             if math.isclose(round(clickdata[i], 2), round(peinfo[i-1][3][same], 2)) or clickdata[i]<peinfo[i-1][3][same]: # find the clickdata in the average time series
                 if ctr == 0:
+                    print(same)
                     second = peinfo[i-1][2][same] # this is the last timestamp in the average time series
                     realtime.append((first, second))
                     lsensor = peinfo[i-1][4] # these are the sensor ids of the second ats
@@ -40,7 +41,9 @@ def calculate_lengths(unedited2, ats):
             segments_length[namez] = cmp
     return segments_length
 
-def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats):
+#def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats):
+
+def prep_segments_to_display(segments_to_displayz, unedited2, ats):
     segments_to_displayx = []
     segments_length = dict()
     for elem, segment in enumerate(segments_to_displayz): # iterate through the line segments
@@ -60,10 +63,12 @@ def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, 
                         hovertemplate='x: %{x}'+'<br>y: %{y} ', visible=True)])
                     segments_to_displayx.append([
                         go.Scatter(x=(segment[0][1],segment[0][2] ), y=(segment[1][1], segment[1][2]),name=namez, 
-                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+                                   #                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+
+                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(dduration), str(dduration)))), 
                                    mode='lines+markers', line=dict(width=3), marker=dict(symbol="arrow", size=15, angleref="previous"), 
                                    hovertemplate='x: %{x}'+'<br>y: %{y} ' 
-    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br> to <br> %{customdata[2]}',visible=True)])
+    + '<br>Length in mm: %{customdata[0]}',visible=True)])
                     #+'<br> First segments sensor IDs: %{customdata[3]}'+ '<br> Second segments sensor IDs: %{customdata[4]}'
                 else:
            #        print("first segment", segment[0])
@@ -73,14 +78,16 @@ def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, 
                         
                         go.Scatter(x=(segment[0][0],segment[1][0]) , 
                         y=(segment[0][1], segment[1][1]), 
-                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+                        #                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+
+                                   customdata= np.column_stack(((str(cmp),str(cmp)),(str(dduration), str(dduration)))), 
                                    name=namez,  opacity=.8, mode='lines+markers', line=dict(width=3), marker=dict(symbol="arrow", size=15, angleref="previous"),
                                    hovertemplate='x: %{x}'+'<br>y: %{y} ' 
-    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br> to <br> %{customdata[2]}',visible=True)])
+    + '<br>Length in mm: %{customdata[0]}',visible=True)])
                     #+'<br> First segments sensor IDs: %{customdata[3]}'+ '<br> Second segments sensor IDs: %{customdata[4]}'
             else:
                 if len(segment[0]) == 3:
-                    segments_to_displayx.append([go.Scatter(
+                    segments_to_displayx.append([go.Scatter( 
                         x=(segment[0][0],segment[0][1]) , 
                         y=(segment[1][0], segment[1][1]), 
                         showlegend=False, name='', opacity=0.15,  mode='lines', line=dict(width=3), 
@@ -88,17 +95,23 @@ def prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, 
 
                     segments_to_displayx.append([
                         go.Scatter(x=(segment[0][1],segment[0][2] ), y=(segment[1][1], segment[1][2]),name=namez, 
-                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+                                   #                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+
+                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(dduration), str(dduration)))), 
                                    mode='lines+markers', line=dict(width=1.5), marker=dict(symbol="arrow", size=10, angleref="previous"),
-                                   hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br>to<br> %{customdata[2]}',visible=True)]),
+                                   hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}',visible=True)]),
                 #+'<br> First segments sensor IDs: %{customdata[3]}'+ '<br> Second segments sensor IDs: %{customdata[4]}'
                 else:
                     segments_to_displayx.append([
                         go.Scatter(x=(segment[0][0],segment[1][0]) , 
                         y=(segment[0][1], segment[1][1]), 
-                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+                        #                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(tstamps[elem][0]),str(tstamps[elem][0])), (str(tstamps[elem][1]),str(tstamps[elem][1])), (str(sensids[elem][0]),str(sensids[elem][0])), (str(sensids[elem][1]),str(sensids[elem][1])), (str(dduration), str(dduration)))), 
+
+                                   customdata= np.column_stack(((str(cmp),str(cmp)), (str(dduration), str(dduration)))), 
                                    name=namez, opacity=.8, mode='lines+markers', line=dict(width=1.5), marker=dict(symbol="arrow", size=10, angleref="previous"), 
-                                   hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br>to<br> %{customdata[2]}',visible=True)]),
+                                   #                                   hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}'+ '<br>Duration in sec: %{customdata[5]}'+ '<br> Timestamps from '+ '<br>%{customdata[1]} <br>to<br> %{customdata[2]}',visible=True)]),
+
+                                   hovertemplate='x: %{x}'+'<br>y: %{y} '    + '<br>Length in mm: %{customdata[0]}',visible=True)]),
     #+'<br> First segments sensor IDs: %{customdata[3]}'+ '<br> Second segments sensor IDs: %{customdata[4]}'
     segments_to_displayy = [segment for segments_line in segments_to_displayx for segment in segments_line]
  #   print("app_background", segments_length)

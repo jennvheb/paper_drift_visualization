@@ -100,48 +100,31 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
     if clickData90:
         point = clickData90['points'][0]
         x_val = point['x']
-    if x_val:
-        if len(segments_to_display_angles) > 0:
-            for elem in segments_to_display_angles:
-                elem[0]['visible'] = False
-        
-        
-        unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, x_val)
-        segments_to_display5 = scale_lengths(unedited2, value90)
-        tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        segments_to_display6, segments_lengths90 = prep_segments_to_display(segments_to_display5, unedited2, tstamps, sensids, ats)
-    else:
-            segments_to_display6 = []
-    
-
     if clickDatashortest:
         point = clickDatashortest['points'][0]
         x_val = point['x']
-    if x_val:
-        if len(segments_to_display_angles) > 0:
-            for elem in segments_to_display_angles:
-                elem[0]['visible'] = False
-        unedited2, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, x_val)
-        segments_to_displayz = scale_lengths(unedited2, valueshortest)
-        tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        segments_to_displayy, segments_lengthsshortest = prep_segments_to_display(segments_to_displayz, unedited2, tstamps, sensids, ats)
-    else:
-        segments_to_displayy = []
- 
-   
     if clickdatasame:
         point = clickdatasame['points'][0]
         x_val = point['x']
     if x_val:
-        if len(segments_to_display_angles) > 0:
-            for elem in segments_to_display_angles:
-                elem[0]['visible'] = False
+        unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, x_val)
+        segments_to_display5 = scale_lengths(unedited2, value90)
+    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+        segments_to_display6, segments_lengths90 = prep_segments_to_display(segments_to_display5, unedited2, ats)
+        unedited2, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, x_val)
+        segments_to_displayz = scale_lengths(unedited2, valueshortest)
+    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+        segments_to_displayy, segments_lengthsshortest = prep_segments_to_display(segments_to_displayz, unedited2, ats)
         unedited2, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y, ats, x_val)
         sec_segments_to_display2 = scale_lengths(unedited2, valuesame)
-        tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)            
+    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
+        sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, ats)     
+        #        sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)     
+
     else:
-        sec_segments_to_display = []
+            segments_to_display6 = []
+            segments_to_displayy = []
+            sec_segments_to_display = []
 
     if clickdataquest:
         point = clickdataquest['points'][0]

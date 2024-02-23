@@ -19,8 +19,10 @@ def calculate_shortest_distance(first_line_x, first_line_y,ats, point_x): #code 
         line_ts = LineString(np.column_stack((ats[n+1][0][0], ats[n+1][1].ravel()))) 
         closest_point = line_ts.interpolate(line_ts.project(p1))
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
+        print(closest_point.x)
         if n == len(ats)-2:
             proc_exec.append(closest_point.x)
+            
     #rint(line_segments)
  #   scaled_lengths = scale_lengths(line_segments, scale_factor)
   #  scaled_and_spaced_lengths = add_offset(scaled_lengths,  offset)
@@ -100,6 +102,9 @@ def calculate_segments_angles(first_line_x, first_line_y, ats, point_x): #code d
         intersections = get_perp_line(original, p1, dist, line_ts)
         closest_point = identify_intersection(intersections, p1, line_ts)
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
+        print("new")
+        
+        print(closest_point.x)
         if n == len(ats)-2:
             proc_exec.append(closest_point.x)
    # scaled_and_spaced_lengths = add_offset(scaled_lengths, offset)
@@ -123,6 +128,7 @@ def calculate_segments_straight_up(first_line_x, first_line_y, ats, point_x): #c
         tpv = np.interp(p1.x, ats[n+1][0][0], ats[n+1][1].ravel()) 
         closest_point = Point(p1.x, tpv)
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
+        print(closest_point.x)
         if n == len(ats)-2:
             proc_exec.append(closest_point.x)
   #  scaled_and_spaced_lengths = add_offset(scaled_lengths, offset)

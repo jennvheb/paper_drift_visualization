@@ -1,5 +1,5 @@
 from viz import calculate_segments_straight_up, calculate_segments_angles, calculate_shortest_distance, scale_lengths
-from app_background import get_processinfo, prep_segments_to_display, calculate_lengths
+from app_background import prep_segments_to_display, calculate_lengths
 import plotly.graph_objs as go
 import dash
 from preprocess import preprocess
@@ -13,8 +13,6 @@ from flask_caching import Cache
 ats, infoinggroups=preprocess() # sets window size, directory, and which outlier function to take
 
 app = dash.Dash(external_stylesheets=[dbc.themes.LUX])
-#app.server.config['CACHE_TYPE'] = 'simple'
-#cache = Cache(app.server)
 
 load_figure_template('LUX')
 server = app.server
@@ -45,7 +43,6 @@ sec_segments_to_display_same = []
      dash.dependencies.Output('shortest-distance-method', 'figure'),
      dash.dependencies.Output('same-timestamp-method', 'figure'),
      dash.dependencies.Output('questionnaire', 'figure')
-  #   dash.dependencies.Output('lengths-store', 'data')
     ],
     [dash.dependencies.Input('90-degrees-method', 'clickData'),
      dash.dependencies.Input('shortest-distance-method', 'clickData'),
@@ -60,9 +57,6 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
     first_line_x = list(ats[0][4][0][1].keys())
     first_line_y = list(ats[0][4][0][1].values())
     n=0
-    segments_lengths90 = []
-    segments_lengthssame = []
-    segments_lengthsshortest = []
 
     match = False
     x_val = None
@@ -72,11 +66,8 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
     if len(pathname) > 1:
         dateiname, x_val = split_path
         x_val = float(x_val)
-     #   print("here", x_val)
         for n in range(len(ats[0][4])):
-          #  print(str(ats[0][4][n][0].split()[0]))
             if str(dateiname) == str(ats[0][4][n][0].split()[0]):
-           #     print("yes")
                 first_line_x = list(ats[0][4][n][1].keys())
                 first_line_y = list(ats[0][4][n][1].values())
                 match = True
@@ -84,16 +75,12 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
             if n == len(ats[0][4])-1 and match== False: 
                 first_line_x = []
                 first_line_y = []
-       # print("dateiname", dateiname)
-        #   print("n", n)
             elif str(dateiname) == "ats_ok":
-                #print(ats[0][5])
                 first_line_x = ats[0][0][0]
                 first_line_y = list(ats[0][1].flatten())
                 match = True
                 break
             elif str(dateiname) == "ats_nok":
-                #print(ats[1][5])
                 first_line_x = ats[1][0][0]
                 first_line_y = list(ats[1][1].flatten())
                 match = True
@@ -108,21 +95,15 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
         point = clickdatasame['points'][0]
         x_val = point['x']
     if x_val != None:
-      #  print("x_val", x_val)
-        unedited2, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, x_val)
+        unedited2 = calculate_segments_angles(first_line_x, first_line_y, ats, x_val, 0.1)
         segments_to_display5 = scale_lengths(unedited2, value90)
-    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        segments_to_display6, segments_lengths90 = prep_segments_to_display(segments_to_display5, unedited2, ats)
-        unedited2, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, x_val)
+        segments_to_display6 = prep_segments_to_display(segments_to_display5, unedited2, ats)
+        unedited2 = calculate_shortest_distance(first_line_x, first_line_y, ats, x_val)
         segments_to_displayz = scale_lengths(unedited2, valueshortest)
-    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        segments_to_displayy, segments_lengthsshortest = prep_segments_to_display(segments_to_displayz, unedited2, ats)
-        unedited2, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y, ats, x_val)
+        segments_to_displayy = prep_segments_to_display(segments_to_displayz, unedited2, ats)
+        unedited2 = calculate_segments_straight_up(first_line_x, first_line_y, ats, x_val)
         sec_segments_to_display2 = scale_lengths(unedited2, valuesame)
-    #    tstamps, sensids = get_processinfo(infoinggroups, indices_xval)
-        sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, ats)     
-        #        sec_segments_to_display, segments_lengthssame = prep_segments_to_display(sec_segments_to_display2, unedited2, tstamps, sensids, ats)     
-
+        sec_segments_to_display = prep_segments_to_display(sec_segments_to_display2, unedited2, ats)     
     else:
             segments_to_display6 = []
             segments_to_displayy = []
@@ -133,24 +114,11 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
         x_val = point['x']
         y_val = point['y']
         if x_val:
-        # if len(segments_to_display_angles) > 0:
-        #     for elem in segments_to_display_angles:
-        #         elem[0]['visible'] = False
             markings = get_the_markings(x_val, y_val)
         else:
             markings = []       
         
 
-    
-    #current_data = dash.callback_context.states.get('lengths-store.data', {})
-
-    #if segments_lengths90:
-    #    current_data['90-degrees-method'] = {'lengths in mm': segments_lengths90}
-    #if segments_lengthsshortest:
-    #    current_data['shortest-distance-method'] = {'lengths in mm': segments_lengthsshortest}
-    #if segments_lengthssame:
-    #    current_data['same-timestamp-method'] = {'lengths in mm': segments_lengthssame}
-  #  print("current data", current_data)
     figure90 = {
         'data': [
             {'x': first_line_x, 'y': first_line_y, 'type': 'line', 'name': "trace # " + str(n) + " " + ats[0][4][n][0].split()[1], 'showlegend':True, 'visible': True},
@@ -184,9 +152,7 @@ def update_graphs(clickData90, clickDatashortest, clickdatasame, clickdataquest,
         ],
         'layout' : {'xaxis':{"title": "time in seconds", "titlefont": {"family": "Arial", "size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, 'range':[-10, 20], 'constrain' : 'domain'}, 'yaxis':{"title": "sensor value in mm","margin-left":"36.5px", "margin-bottom": "7.6px", "titlefont": {"family": "Arial","size": 12, "color": "rgb(68, 68, 68)"}, "tickfont" : {"family": "Arial","size":10, "color": "rgb(68, 68, 68)"}, "scaleanchor":"x", "scaleratio":1},'legend': {"font": {"family": "Arial","size": 10, "color": "rgb(68, 68, 68)"}, 'hoverlabel_align' : 'right', 'margin' : {'l': 20, 'b': 30, 'r': 10, 't': 10}} },
     }
-    #cache.set('lengths-store', current_data)
     return figure90, figureshortest, figuresame, figurequest
-# current_data
 
 
 def calculate_graphs_without_updating(id, point):
@@ -212,13 +178,13 @@ def calculate_graphs_without_updating(id, point):
             match = True
             break
     fpoint = float(point)
-    unedited_angles, indices_xval = calculate_segments_angles(first_line_x, first_line_y, ats, fpoint)
+    unedited_angles = calculate_segments_angles(first_line_x, first_line_y, ats, fpoint, 0.1)
     segments_lengths90 = calculate_lengths(unedited_angles, ats)
     
-    unedited_shortest, indices_xval = calculate_shortest_distance(first_line_x, first_line_y, ats, fpoint)
+    unedited_shortest = calculate_shortest_distance(first_line_x, first_line_y, ats, fpoint)
     segments_lengthsshortest = calculate_lengths(unedited_shortest, ats)
 
-    unedited_straight, indices_xval = calculate_segments_straight_up(first_line_x, first_line_y, ats, fpoint)
+    unedited_straight = calculate_segments_straight_up(first_line_x, first_line_y, ats, fpoint)
     segments_lengthssame = calculate_lengths(unedited_straight, ats)
 
     current_data = dict()
@@ -371,10 +337,6 @@ app.layout = html.Div([
         style={'width': '50%', 'display': 'inline-block'}),
         html.Div([
             html.P(children='Selected Trace + Ats_ok + Ats_nok', style = {'font-weight': 'bold','textAlign': 'left','margin-left':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-            html.Label('Scaling factor (min: 1) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-            dcc.Input(id='scaling-factorsame',persistence=True, type='number', min=1, step=1, value=1),
-         #   html.Label('Offset (min: 0) ', style = {'textAlign': 'left','margin-left':'13px', 'margin-right':'13px', 'margin-top':'10px','margin-bottom': '-3px'}),
-         #   dcc.Input(id='spacing2', type='number', min=0, step=0.1, value=0),
             dcc.Graph(
                 id='questionnaire',
                 style={'width': '70vh', 'height': '95vh'}

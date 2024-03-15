@@ -4,25 +4,25 @@ The output of this code is a dash application in which one can specify the ID of
 If no ID is specified, a random trace is shown.
 
 ### Example 1: 
-appending "/<\trace id>\" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
+appending "/&lt;trace id&gt;" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
 
 ### Example 2:
-appending "/<\trace id>/<\timestamp>" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp.
+appending "/&lt;trace id&gt;/&lt;timestamp&gt;" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp.
 
 ### Example 3:
-appending "/<\trace id>/<\timestamp>/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp.
+appending "/&lt;trace id&gt;/&lt;timestamp&gt;" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp.
 
 ### Explanation of the graphs:
 
-"All traces + ats ok + ats nok": All traces (with their IDs shown in the legend), the average time series containing traces marked as ok and the average time series containing traces marked as nok are displayed.
+**All traces + ats ok + ats nok**: All traces (with their IDs shown in the legend), the average time series containing traces marked as ok and the average time series containing traces marked as nok are displayed.
 
-"The 90 degree angles method": The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the 90 degrees drift method. On the visualization, the drifts can be scaled.
+**The 90 degree angles method**: The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the 90 degrees drift method. On the visualization, the drifts can be scaled.
 
-"The shortest distance method":  The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the shortest distance drift method. On the visualization, the drifts can be scaled.
+**The shortest distance method**:  The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the shortest distance drift method. On the visualization, the drifts can be scaled.
 
-"The same timestamp method":  The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the same timestamp drift method. On the visualization, the drifts can be scaled.
+**The same timestamp method**:  The specified trace is shown. If either a timestamp is specified in the url or clicked on the graph, the drift between that trace and the ats ok and ats nok is displayed either on the graph (with the exact length on the hover) or as a json. The drift is the result of the same timestamp drift method. On the visualization, the drifts can be scaled.
 
-"Selected Trace + Ats_ok + Ats_nok": The specified trace is shown along with the ats ok and ats nok. Data points can also be clicked, which appear as red dots.
+**Selected Trace + Ats_ok + Ats_nok**: The specified trace is shown along with the ats ok and ats nok. Data points can also be clicked, which appear as red dots.
 
 # setup
 First, ensure you have Python 3 installed by running 'python3 --version'. If Python 3 is not installed, please install it from the official Python website or your system's package manager.

@@ -4,13 +4,13 @@ The output of this code is a dash application in which one can specify the ID of
 If no ID is specified, a random trace is shown.
 
 ### Example 1: 
-appending "/_trace id_" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
+appending "/<\trace id>" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
 
 ### Example 2:
-appending "/_trace id_/_timestamp_" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp.
+appending "/<\trace id>/<\timestamp>" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp.
 
 ### Example 3:
-appending "/_trace id_/_timestamp_/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp.
+appending "/<\trace id>/<\timestamp>/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp.
 
 ### Explanation of the graphs:
 

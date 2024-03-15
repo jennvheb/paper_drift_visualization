@@ -7,8 +7,6 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 from dash_bootstrap_templates import load_figure_template
 import json
-from flask import jsonify
-from flask_caching import Cache
 
 ats, infoinggroups=preprocess() # sets window size, directory, and which outlier function to take
 

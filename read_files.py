@@ -1,29 +1,19 @@
 import os
-from time import time
 import yaml
 import dateutil.parser as dp
 import traces
-from datetime import timedelta
-import copy
-import numpy as np
-from scipy import signal
-import math
-import json
 
 
-# import the files and transform into time series
-
-def read(directory, folder):
+def read(directory, folder): # go through the production_status.txt file where the filename and whether the outcome is ok/nok is specified
     filenames = []
     with open(directory, 'r') as lines:
         for events in lines:
             filenames.append((events.split(':')[0], events.split(':')[1])) # divided into filename and ok/nok
     sensordata = query_status_file(filenames, folder)
     time_sequence, all_peinfo = make_traces(sensordata, folder)
-
     return time_sequence, all_peinfo
 
-def query_status_file(filenames, folder):
+def query_status_file(filenames, folder): # go through the files specified in production_status.txt and search for the file containing the sensor data streams contained within
     sensordata = []
     for filename in filenames:
             flag = False
@@ -52,8 +42,8 @@ def make_traces(sensordata, folder):
     single_peinfo = dict()
     tick = 'a'
     for filename in sensordata:
-            f = os.path.join(folder, filename[0] + ".xes.yaml") # open file with measurements contained
-            with open(f, 'r') as stream: 
+            f = os.path.join(folder, filename[0] + ".xes.yaml") 
+            with open(f, 'r') as stream: # open file with measurements contained
                 ctr = 0
                 time_sequence = traces.TimeSeries()
                 timestampss = traces.TimeSeries()
@@ -81,7 +71,6 @@ def make_traces(sensordata, folder):
 
                                                     
                 if len(time_sequence) > 0:
-
                     regular = time_sequence.sample( #resample the time sequence to equidistant time series
                         sampling_period=0.05,
                         start= time_sequence.first_key(),

@@ -4,15 +4,15 @@ The output of this code is a dash application in which one can specify the ID of
 If no ID is specified, a random trace is shown.
 
 ### Example 1: 
-appending "/<traceid>" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
+appending "/_trace id_" to the url changes the displayed trace on which the drift to the average time series (in the following called ats) nok/ok are displayed to that specific trace. the drift is shown, when a data point is clicked.
 
 ### Example 2:
-appending "104fe464-b780-4796-8c7d-9c05b400a259/10.75" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp (here 10.75)
+appending "/_trace id_/_timestamp_" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. the drift is shown on the specified timestamp.
 
 ### Example 3:
-appending "104fe464-b780-4796-8c7d-9c05b400a259/10.75/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp (here 10.75)
+appending "/_trace id_/_timestamp_/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. the drift is shown on the specified timestamp.
 
-Explanation of the graphs:
+### Explanation of the graphs:
 
 "All traces + ats ok + ats nok": All traces (with their IDs shown in the legend), the average time series containing traces marked as ok and the average time series containing traces marked as nok are displayed.
 

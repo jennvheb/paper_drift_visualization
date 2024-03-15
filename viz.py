@@ -81,6 +81,11 @@ def calculate_segments_angles(first_line_x, first_line_y, ats, point_x, dist): #
         line_segments.append(((p1.x, p1.y), (closest_point.x, closest_point.y)))
     return line_segments
 
+
+
+
+
+
 def calculate_segments_straight_up(first_line_x, first_line_y, ats, point_x): #code description in thesis
     line_segments = []
     p1 = get_point(first_line_x,first_line_y, point_x)

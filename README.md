@@ -27,12 +27,12 @@ appending "/&lt;trace id&gt;/&lt;timestamp&gt;/json" to the url changes the trac
 # setup
 First, ensure you have Python 3 installed by running 'python3 --version'. If Python 3 is not installed, please install it from the official Python website or your system's package manager.
 
-Next, create a virtual environment for the project to manage dependencies separately from your global Python installation:
+After cloning the repository, create a virtual environment for the project to manage dependencies separately from your global Python installation:
 ```sh
 $ python3 -m venv env
 ```
 
-This command creates a new directory env where the virtual environment files are stored. To activate the virtual environment, run:
+To activate the virtual environment, run:
 
 On macOS/Linux:
 ```sh

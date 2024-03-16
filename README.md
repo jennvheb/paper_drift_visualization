@@ -10,7 +10,7 @@ appending "/&lt;trace id&gt;" to the url changes the displayed trace on which th
 appending "/&lt;trace id&gt;/&lt;timestamp&gt;" to the url changes the displayed trace on which the drift to the ats nok/ok are displayed to that specific trace. The drift is shown on the specified timestamp.
 
 ### Example 3:
-appending "/&lt;trace id&gt;/&lt;timestamp&gt;" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. The drift is shown on the specified timestamp.
+appending "/&lt;trace id&gt;/&lt;timestamp&gt;/json" to the url changes the trace on which the drift to the ats nok/ok are output in a json file to that specific trace. The drift is shown on the specified timestamp.
 
 ### Explanation of the graphs:
 

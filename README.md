@@ -25,7 +25,7 @@ appending "/&lt;trace id&gt;/&lt;timestamp&gt;/json" to the url changes the trac
 **Selected Trace + Ats_ok + Ats_nok**: The specified trace is shown along with the ats ok and ats nok. Data points can also be clicked, which appear as red dots.
 
 # setup
-First, ensure you have Python 3 installed by running 'python3 --version'. If Python 3 is not installed, please install it from the official Python website or your system's package manager.
+First, ensure you have Python 3 installed by running 'python3 --version'. If Python 3 is not installed, please install it from the official Python website or your system's package manager. This code is running on Python 3.10.14.
 
 After cloning the repository, create a virtual environment for the project to manage dependencies separately from your global Python installation:
 ```sh
@@ -44,7 +44,7 @@ env\Scripts\activate.bat
 ```
 
 # dependencies
-Install all required dependencies by running:
+Install all required dependencies (using Python 3.10.14) by running:
 ```sh
 $ pip3 install -r requirements.txt
 ```
